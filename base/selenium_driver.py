@@ -3,6 +3,7 @@ import logging
 import time
 import os
 from selenium.common.exceptions import ElementNotVisibleException, ElementNotSelectableException, NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -13,6 +14,9 @@ class SeleniumDriver:
     def __init__(self, driver):
         self.driver = driver
         self.actions = ActionChains(self.driver)
+        self.wait = WebDriverWait(self.driver, 5, poll_frequency=1,
+                                  ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException,
+                                                      NoSuchElementException])
 
     def navigate_to_app_page(self):
         self.driver.get("https://app.fiscalnote.com/")
@@ -35,15 +39,13 @@ class SeleniumDriver:
 
     def wait_for_element(self, locator, until=True):
         element = None
-        wait = WebDriverWait(self.driver, 5, poll_frequency=1,
-                             ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException,
-                                                 NoSuchElementException])
+
         try:
             if until:
-                element = wait.until(lambda dr: dr.find_element(*locator))
+                element = self.wait.until(lambda dr: dr.find_element(*locator))
                 self.log.info("Wait for " + locator[1])
             else:
-                element = wait.until_not(lambda dr: dr.find_element(*locator))
+                element = self.wait.until_not(lambda dr: dr.find_element(*locator))
                 self.log.info("Wait for " + locator[1] + " to be NOT present")
         except:
             self.log.info("Element does not show up for 5 seconds with locator: " + locator[1])
@@ -51,30 +53,24 @@ class SeleniumDriver:
 
     def wait_for_elements(self, locator, until=True):
         elements = None
-        wait = WebDriverWait(self.driver, 5, poll_frequency=1,
-                             ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException,
-                                                 NoSuchElementException])
+
         try:
             if until:
-                elements = wait.until(lambda dr: dr.find_elements(*locator))
+                elements = self.wait.until(lambda dr: dr.find_elements(*locator))
                 self.log.info("Wait for locator: " + locator[1])
             else:
-                elements = wait.until_not(lambda dr: dr.find_elements(*locator))
+                elements = self.wait.until_not(lambda dr: dr.find_elements(*locator))
                 self.log.info("Wait for locator: " + locator[1] + " to be NOT present")
         except:
             self.log.info("Elements do not show up for 5 seconds with locator: " + locator[1])
         return elements
 
     def wait_for_desired_url(self, desired_url):
-        wait = WebDriverWait(self.driver, 5, poll_frequency=1,
-                             ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException,
-                                                 NoSuchElementException])
-
         try:
-            wait.until(lambda dr: dr.current_url == desired_url)
+            self.wait.until(lambda dr: dr.current_url == desired_url)
             self.log.info("Wait for desired_url: " + desired_url)
         except:
-            self.log.info("Desired url does not show up for 5 seconds: " + desired_url)
+            self.log.log("Desired url does not show up for 5 seconds: " + desired_url)
 
     def get_element(self, locator):
         element = None
@@ -221,4 +217,3 @@ class SeleniumDriver:
                 self.log.info("Scroll into element with js executor method")
         except:
             self.log.info("Cannot scroll into element with js executor method")
-

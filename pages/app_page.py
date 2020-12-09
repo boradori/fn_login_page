@@ -10,9 +10,13 @@ class AppPage(SeleniumDriver):
     # locators
     _login_page_btn = (By.CSS_SELECTOR, ".sign-in-form > button[type='submit']")
 
-    def wait_for_url_change(self):
+    def wait_for_app_page_url_change(self):
         self.wait_for_desired_url("https://app.fiscalnote.com/?error=notauthorized")
 
     def navigate_to_login_page(self):
         login_page_btn = self.wait_for_element(self._login_page_btn)
         self.click_element(None, login_page_btn)
+
+    def verify_redirection_to_app_page(self):
+        self.wait_for_app_page_url_change()
+        return self.is_element_present(self._login_page_btn)
