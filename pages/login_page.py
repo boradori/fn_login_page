@@ -1,7 +1,5 @@
 from selenium.webdriver.common.by import By
 from base.selenium_driver import SeleniumDriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class LoginPage(SeleniumDriver):
@@ -25,9 +23,9 @@ class LoginPage(SeleniumDriver):
         password_field = self.wait_for_element(self._password_field)
         self.send_keys(password, None, password_field)
 
-    def clear_fields(self):
-        self.driver.find_element(*self._username_field).send_keys(Keys.CONTROL, "a", Keys.DELETE)
-        self.driver.find_element(*self._password_field).send_keys(Keys.CONTROL, "a", Keys.DELETE)
+    def clear_input_fields(self):
+        self.clear_field(self._username_field)
+        self.clear_field(self._password_field)
 
     def click_login_btn(self):
         login_btn = self.wait_for_element(self._login_btn)

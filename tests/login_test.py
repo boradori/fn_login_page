@@ -25,7 +25,7 @@ class LoginTest(unittest.TestCase):
     @pytest.fixture()
     def clear_input_fields_teardown(self):
         yield
-        self.login_page.clear_fields()
+        self.login_page.clear_input_fields()
 
     @pytest.mark.run(order=1)
     @pytest.mark.usefixtures('navigate_to_login_page')
