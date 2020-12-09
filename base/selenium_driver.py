@@ -2,6 +2,7 @@ from utilities.custom_logger import custom_logger
 import logging
 import time
 import os
+import platform
 from selenium.common.exceptions import ElementNotVisibleException, ElementNotSelectableException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
@@ -149,13 +150,26 @@ class SeleniumDriver:
                 self.log.info("Cannot send data on the element")
 
     def clear_field(self, locator, element=None):
+        os_base = platform.system()
         try:
             if locator:
                 element = self.get_element(locator)
-                element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
+
+                if os_base == "Darwin":
+                    element.send_keys(Keys.COMMAND + 'a')
+                    element.send_keys(Keys.DELETE)
+                else:
+                    element.send_keys(Keys.CONTROL + 'a')
+                    element.send_keys(Keys.DELETE)
+
                 self.log.info("Cleared field on element with locator: " + locator[1])
             elif element:
-                element.send_keys(Keys.CONTROL, 'a', Keys.DELETE)
+                if os_base == "Darwin":
+                    element.send_keys(Keys.COMMAND + 'a')
+                    element.send_keys(Keys.DELETE)
+                else:
+                    element.send_keys(Keys.CONTROL + 'a')
+                    element.send_keys(Keys.DELETE)
                 self.log.info("Cleared field on element")
         except:
             if locator:

@@ -1,13 +1,13 @@
 from selenium.webdriver.common.by import By
 from base.selenium_driver import SeleniumDriver
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 
 class LoginPage(SeleniumDriver):
-    def __init__(self, driver, browser):
+    def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
-        self.browser = browser
 
     # locators
     _username_field = (By.CSS_SELECTOR, "input[name='email']")
@@ -29,15 +29,11 @@ class LoginPage(SeleniumDriver):
         username_field = self.wait_for_element_ec(self._username_field, EC.element_to_be_clickable)
         password_field = self.wait_for_element_ec(self._password_field, EC.element_to_be_clickable)
 
-        if self.browser == 'firefox':
-            username_field.click()
-            username_field.clear()
+        username_field.click()
+        self.clear_field(None, username_field)
 
-            password_field.click()
-            password_field.clear()
-        else:
-            self.clear_field(None, username_field)
-            self.clear_field(None, password_field)
+        password_field.click()
+        self.clear_field(None, password_field)
 
     def click_login_btn(self):
         login_btn = self.wait_for_element(self._login_btn)
