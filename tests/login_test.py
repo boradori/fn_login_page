@@ -13,7 +13,7 @@ class LoginTest(unittest.TestCase):
     @pytest.fixture(autouse=True)
     def object_setup(self):
         self.app_page = AppPage(self.driver)
-        self.login_page = LoginPage(self.driver)
+        self.login_page = LoginPage(self.driver, self.browser)
         self.dashboard_page = DashboardPage(self.driver)
         self.status = Status(self.driver)
 

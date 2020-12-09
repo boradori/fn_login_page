@@ -3,7 +3,6 @@ import logging
 import time
 import os
 from selenium.common.exceptions import ElementNotVisibleException, ElementNotSelectableException, NoSuchElementException
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
@@ -62,6 +61,26 @@ class SeleniumDriver:
             else:
                 elements = self.wait.until_not(lambda dr: dr.find_elements(*locator))
                 self.log.info("Wait for locator: " + locator[1] + " to be NOT present")
+        except:
+            self.log.info("Elements do not show up for 5 seconds with locator: " + locator[1])
+        return elements
+
+    def wait_for_element_ec(self, locator, ec):
+        element = None
+
+        try:
+            element = self.wait.until(ec(locator))
+            self.log.info("Wait for locator using Expected Conditions: " + locator[1])
+        except:
+            self.log.info("Element does not show up for 5 seconds with locator: " + locator[1])
+        return element
+
+    def wait_for_elements_ec(self, locator, ec):
+        elements = None
+
+        try:
+            elements = self.wait.until(ec(locator))
+            self.log.info("Wait for locator using Expected Conditions: " + locator[1])
         except:
             self.log.info("Elements do not show up for 5 seconds with locator: " + locator[1])
         return elements

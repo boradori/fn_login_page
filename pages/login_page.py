@@ -1,11 +1,13 @@
 from selenium.webdriver.common.by import By
 from base.selenium_driver import SeleniumDriver
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class LoginPage(SeleniumDriver):
-    def __init__(self, driver):
+    def __init__(self, driver, browser):
         super().__init__(driver)
         self.driver = driver
+        self.browser = browser
 
     # locators
     _username_field = (By.CSS_SELECTOR, "input[name='email']")
@@ -16,16 +18,26 @@ class LoginPage(SeleniumDriver):
     _blank_password_err_msg = (By.XPATH, "//div[contains(@class, 'input-password')]/div/span[contains(text(), 'be blank')]")
 
     def enter_username(self, username):
-        username_field = self.wait_for_element(self._username_field)
+        username_field = self.wait_for_element_ec(self._username_field, EC.element_to_be_clickable)
         self.send_keys(username, None, username_field)
 
     def enter_password(self, password):
-        password_field = self.wait_for_element(self._password_field)
+        password_field = self.wait_for_element_ec(self._password_field, EC.element_to_be_clickable)
         self.send_keys(password, None, password_field)
 
     def clear_input_fields(self):
-        self.clear_field(self._username_field)
-        self.clear_field(self._password_field)
+        username_field = self.wait_for_element_ec(self._username_field, EC.element_to_be_clickable)
+        password_field = self.wait_for_element_ec(self._password_field, EC.element_to_be_clickable)
+
+        if self.browser == 'firefox':
+            username_field.click()
+            username_field.clear()
+
+            password_field.click()
+            password_field.clear()
+        else:
+            self.clear_field(None, username_field)
+            self.clear_field(None, password_field)
 
     def click_login_btn(self):
         login_btn = self.wait_for_element(self._login_btn)
