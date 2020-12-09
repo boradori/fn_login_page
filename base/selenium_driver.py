@@ -14,7 +14,7 @@ class SeleniumDriver:
         self.driver = driver
         self.actions = ActionChains(self.driver)
 
-    def navigate_to_login_page(self):
+    def navigate_to_app_page(self):
         self.driver.get("https://app.fiscalnote.com/")
 
     def get_screenshot(self, message):
@@ -64,6 +64,17 @@ class SeleniumDriver:
         except:
             self.log.info("Elements do not show up for 5 seconds with locator: " + locator[1])
         return elements
+
+    def wait_for_desired_url(self, desired_url):
+        wait = WebDriverWait(self.driver, 5, poll_frequency=1,
+                             ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException,
+                                                 NoSuchElementException])
+
+        try:
+            wait.until(lambda dr: dr.current_url == desired_url)
+            self.log.info("Wait for desired_url: " + desired_url)
+        except:
+            self.log.info("Desired url does not show up for 5 seconds: " + desired_url)
 
     def get_element(self, locator):
         element = None
