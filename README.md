@@ -9,7 +9,7 @@ Since we are using **pytest-env**, you need to make **pytest.ini** file in the r
 ```
 touch pytest.ini
 ```
-In **pytest.ini**, add the following snippet after replacing USERNAME and PASSWORD with your own. 
+In **pytest.ini**, add the following snippet after replacing USERNAME, PASSWORD, INVALID_USERNAME, and INVALID_PASSWORD with your own. 
 ```
 [pytest]
 env =
