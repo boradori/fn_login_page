@@ -15,7 +15,7 @@ class AppPage(SeleniumDriver):
 
     def navigate_to_login_page(self):
         login_page_btn = self.wait_for_element(self._login_page_btn)
-        self.click_element(None, login_page_btn)
+        self.click_element_js(login_page_btn)
 
     def verify_redirection_to_app_page(self):
         self.wait_for_app_page_url_change()
